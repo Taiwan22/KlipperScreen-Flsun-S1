@@ -1113,6 +1113,10 @@ class KlipperScreen(Gtk.Window):
             sensors = self.apiclient.send_request("server/sensors/list?extended=True")
             if sensors is not False:
                 self.printer.configure_moon_sensors(sensors)
+            else:
+                self.printer.configure_moon_sensors({})
+        else:
+            self.printer.configure_moon_sensors({})
         # End FLSUN Changes
         if "webcam" in self.server_info["components"]:
             cameras = self.apiclient.send_request("server/webcams/list")
