@@ -144,6 +144,8 @@ class Panel(ScreenPanel):
 
         filament_sensors = self._printer.get_filament_sensors()
         sensors = Gtk.Grid(valign=Gtk.Align.CENTER, row_spacing=5, column_spacing=5)
+        sensors.set_margin_top(20) # FLSUN Changes
+        sensors.set_margin_bottom(20) # FLSUN Changes
         with_switches = (
             len(filament_sensors) < 4
             and not (self._screen.vertical_mode and self._screen.height < 600)
@@ -300,7 +302,7 @@ class Panel(ScreenPanel):
             if not self.unload_filament:
                 self._screen.show_popup_message("Macro _KS_UNLOAD_FILAMENT" + _("not found!\nPlease update your configuration files.")) # FLSUN Changes
             else:
-                self._screen._send_action(widget, "printer.gcode.script",
+                self._screen._confirm_unload_action(None, _("TO PREVENT EXTRUDER CLOG, FOLLOW THESE STEPS:\n\n\n1. Unclip the PTFE tube and press the lower spring clip of the PTFE connector.\n\n2. Remove the PTFE tube from the connector.\n\n3. Cut the filament and press Unload button."), "printer.gcode.script",
                                           {"script": f"_KS_UNLOAD_FILAMENT SPEED={self.speed * 60}"}) # FLSUN Changes
         if direction == "+":
             if not self.load_filament:

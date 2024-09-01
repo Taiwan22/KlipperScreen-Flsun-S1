@@ -10,8 +10,6 @@ from datetime import datetime
 from math import log
 from ks_includes.screen_panel import ScreenPanel
 
-DRYING_BOX_JSON_PATH = '/dev/shm/drying_box.json' # FLSUN Changes
-
 class BasePanel(ScreenPanel):
     def __init__(self, screen, title=None):
         super().__init__(screen, title)
@@ -220,10 +218,12 @@ class BasePanel(ScreenPanel):
             return self._gtk.Image("heater", img_size, img_size)
         else:
             return self._gtk.Image("heat-up", img_size, img_size)
+
     # Start FLSUN Changes
     def get_icon_by_name(self, icon_name, img_size):
         return self._gtk.Image(icon_name, img_size, img_size)
     # End FLSUN Changes
+
     def activate(self):
         if self.time_update is None:
             self.time_update = GLib.timeout_add_seconds(1, self.update_time)
@@ -298,7 +298,7 @@ class BasePanel(ScreenPanel):
                         for dialog in self._screen.dialogs:
                             self._gtk.remove_dialog(dialog)
             return
-        
+
         # Start FLSUN Changes
         elif action == "notify_sensor_update":
             self.update_top_sensors()

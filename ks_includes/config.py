@@ -533,6 +533,7 @@ class KlipperScreenConfig:
 
         return None if name not in self.config else self.config[name]
 
+    # Start FLSUN Changes
     def get_topbar_sensors(self):
         return {sensor_cfg.replace("topbar_sensor ", ""): self.config[sensor_cfg] for sensor_cfg in self.config.sections() if sensor_cfg.startswith("topbar_sensor ")}
 
@@ -541,6 +542,7 @@ class KlipperScreenConfig:
             name = f"topbar_sensor {name}"
 
         return None if name not in self.config else self.config[name]
+    # End FLSUN Changes
 
     def get_printers(self):
         return self.printers

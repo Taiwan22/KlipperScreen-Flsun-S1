@@ -14,7 +14,7 @@ class Printer:
         self.state_cb = state_cb
         self.state_callbacks = state_callbacks
         self.power_devices = {}
-        self.moon_sensors = {}
+        self.moon_sensors = {} # FLSUN Changes
         self.tools = []
         self.extrudercount = 0
         self.tempdevcount = 0
@@ -149,6 +149,7 @@ class Printer:
         if data['device'] in self.power_devices:
             self.power_devices[data['device']]['status'] = data['status']
 
+    # Start FLSUN Changes
     def process_moon_sensors_update(self, data):
         for sensor in data:
             if sensor in self.moon_sensors:
@@ -157,6 +158,7 @@ class Printer:
                         value["value"] = data[sensor][param]
                     else:
                         value["value"] = None
+    # End FLSUN Changes
 
     def change_state(self, state):
         if state not in list(self.state_callbacks):
@@ -178,6 +180,7 @@ class Printer:
             }
         logging.debug(f"Power devices: {self.power_devices}")
 
+    # Start FLSUN Changes
     def configure_moon_sensors(self, data):
         self.moon_sensors = {}
 
@@ -197,6 +200,7 @@ class Printer:
                 logging.debug(f"Moonraker sensors: {self.moon_sensors}")
         except Exception as e:
             logging.error(f"Error configuring moonraker sensors: {e}")
+    # End FLSUN Changes
 
     def configure_cameras(self, data):
         self.cameras = data
@@ -275,7 +279,7 @@ class Printer:
         return {
             "moonraker": {
                 "power_devices": {"count": len(self.get_power_devices())},
-                "moon_sensors": {"count": len(self.get_moon_sensors())},
+                "moon_sensors": {"count": len(self.get_moon_sensors())}, # FLSUN Changes
                 "cameras": {"count": len(self.cameras)},
                 "spoolman": self.spoolman,
             },
@@ -322,6 +326,7 @@ class Printer:
     def get_power_devices(self):
         return list(self.power_devices)
 
+    # Start FLSUN Changes
     def get_moon_sensors(self):
         return list(self.moon_sensors)
 
@@ -329,6 +334,7 @@ class Printer:
         if sensor not in self.moon_sensors:
             return
         return self.moon_sensors[sensor]
+    # End FLSUN Changes
 
     def get_power_device_status(self, device):
         if device not in self.power_devices:

@@ -18,6 +18,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
+msgid "TO PREVENT EXTRUDER CLOG, FOLLOW THESE STEPS:\n\n\n1. Unclip the PTFE tube and press the lower spring clip of the PTFE connector.\n\n2. Remove the PTFE tube from the connector.\n\n3. Cut the filament and press Unload button."
+msgstr ""
+
+msgid "Do you want to start motors calibration?"
+msgstr ""
+
+msgid "Do you want to start measuring resonances?"
+msgstr ""
+
+msgid "Do you want to start bed calibrations?\n\nA Delta Calibration and a Bed Leveling will be performed."
+msgstr ""
+
+msgid "Do you want to start Z Offset calibration?"
+msgstr ""
+
+msgid "YOUR PRINTER DOES NOT SEEM TO BE CALIBRATED!"
+msgstr ""
+
+msgid "It's necessary to perform calibrations before starting a print."
+msgstr ""
+
+msgid "Go to Configurations → Calibrations menu to calibrate your printer."
+msgstr ""
+
 msgid "Please heat the nozzle."
 msgstr ""
 
