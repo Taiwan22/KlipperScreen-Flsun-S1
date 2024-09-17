@@ -147,6 +147,7 @@ class KlipperScreen(Gtk.Window):
         self.change_theme(self.theme)
         self.add(self.base_panel.main_grid)
         self.show_all()
+        self.update_cursor(self.show_cursor)
         min_ver = (3, 8)
         if sys.version_info < min_ver:
             self.show_error_modal(
@@ -159,18 +160,14 @@ class KlipperScreen(Gtk.Window):
         if self._config.errors:
             self.show_error_modal("Invalid config file", self._config.get_errors())
             return
-        if self.show_cursor:
-            self.get_window().set_cursor(
-                Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.ARROW))
-            os.system("xsetroot  -cursor_name  arrow")
-        else:
-            self.get_window().set_cursor(
-                Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.BLANK_CURSOR))
-            os.system("xsetroot  -cursor ks_includes/emptyCursor.xbm ks_includes/emptyCursor.xbm")
         self.base_panel.activate()
         self.set_screenblanking_timeout(self._config.get_main_config().get('screen_blanking'))
         self.log_notification("KlipperScreen Started", 1)
         self.initial_connection()
+
+    def update_cursor(self, show: bool):
+        self.show_cursor = show
+        self.gtk.set_cursor(show, window=self.get_window())
 
     def state_execute(self, state, callback):
         self.close_screensaver()
@@ -239,6 +236,8 @@ class KlipperScreen(Gtk.Window):
             self.printers[ind][name]["moonraker_host"],
             self.printers[ind][name]["moonraker_port"],
             self.printers[ind][name]["moonraker_api_key"],
+            self.printers[ind][name]["moonraker_path"],
+            self.printers[ind][name]["moonraker_ssl"],
         )
         self._ws = KlippyWebsocket(
             {
@@ -250,6 +249,8 @@ class KlipperScreen(Gtk.Window):
             self.printers[ind][name]["moonraker_host"],
             self.printers[ind][name]["moonraker_port"],
             self.printers[ind][name]["moonraker_api_key"],
+            self.printers[ind][name]["moonraker_path"],
+            self.printers[ind][name]["moonraker_ssl"],
         )
         if self.files is None:
             self.files = KlippyFiles(self)
@@ -640,6 +641,8 @@ class KlipperScreen(Gtk.Window):
 
         # Avoid leaving a cursor-handle
         close.grab_focus()
+        self.gtk.set_cursor(False, window=self.get_window())
+
         self.screensaver = box
         self.screensaver.show_all()
         self.power_devices(None, self._config.get_main_config().get("screen_off_devices", ""), on=False)
@@ -659,6 +662,7 @@ class KlipperScreen(Gtk.Window):
         for dialog in self.dialogs:
             logging.info(f"Restoring Dialog {dialog}")
             dialog.show()
+        self.gtk.set_cursor(self.show_cursor, window=self.get_window())
         self.show_all()
         self.power_devices(None, self._config.get_main_config().get("screen_on_devices", ""), on=True)
 
@@ -995,14 +999,26 @@ class KlipperScreen(Gtk.Window):
         except Exception as e:
             logging.debug(f"Error parsing jinja for confirm_unload_action\n{e}\n\n{traceback.format_exc()}")
 
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        vbox.set_margin_top(20)
+        vbox.set_margin_bottom(0)
+        vbox.set_margin_start(0)
+        vbox.set_margin_end(0)
+
         label = Gtk.Label(hexpand=True, vexpand=True, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER,
-                          wrap=True, wrap_mode=Pango.WrapMode.WORD_CHAR)
+                      wrap=True, wrap_mode=Pango.WrapMode.WORD_CHAR)
         label.set_markup(text)
+        vbox.pack_start(label, True, True, 0)
+
+        image_path = os.path.join(klipperscreendir, "styles", "unload.png")
+        image = Gtk.Image.new_from_file(image_path)
+    
+        vbox.pack_start(image, True, True, 0)
 
         if self.confirm is not None:
             self.gtk.remove_dialog(self.confirm)
         self.confirm = self.gtk.Dialog(
-            "KlipperScreen", buttons, label, self._confirm_send_action_response, method, params
+            "KlipperScreen", buttons, vbox, self._confirm_send_action_response, method, params
         )
     # End FLSUN Changes
 
